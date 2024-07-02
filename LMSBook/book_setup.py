@@ -12,14 +12,16 @@ class LMSBook:
         self.new=(By.XPATH, "//button[@class='btn btn-primary o-kanban-button-new']")
 
         # #Book Fields
-        self.name=(By.ID,"name")
+        self.name = (By.XPATH, "//input[@class='o_input' and @id='name' and @placeholder='Title']")
+        
         #book information
         self.isbn=(By.ID,"isbn")
         self.author_ids=(By.ID,"author_ids")
-        self.country_id=(By.ID,"country_id")
+        self.country_id=(By.XPATH,"//div[@class='o_cell o_wrap_input flex-grow-1 flex-sm-grow-0 text-break']//input[@id='country_id']")
         self.MRPprice=(By.ID,"price")
+
         #book categorization
-        self.language_id=(By.ID,"language_id")
+        self.language_id=(By.XPATH,"//div[@class='o_cell o_wrap_input flex-grow-1 flex-sm-grow-0 text-break']//input[@id='language_id']")
         self.genre_ids=(By.ID,"genre_ids")
         self.is_series=(By.ID,"is_series")
         self.parent_id=(By.ID,"parent_id")
@@ -67,6 +69,7 @@ class LMSBook:
 
     def fill_book_information(self,**kwargs):
         try:
+            time.sleep(2)
             name = self.driver.find_element(*self.name).send_keys(kwargs.get("name"))
             isbn = self.driver.find_element(*self.isbn).send_keys(kwargs.get("isbn"))
 

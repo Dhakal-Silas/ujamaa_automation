@@ -8,17 +8,17 @@ class LMSMemberTest:
         self.driver = driver
         
     members_info = {
-        "name": "Hari Ram",
-        "phone_no": "9800000000",
-        "address": "Sankhamul,Kathmandu",
-        "date_of_birth": "1990-01-01" ,
-        "member_email": "hariram@gmail.com",
+        "name": os.getenv("LMSMember_NAME"),
+        "phone_no": os.getenv("LMSMember_PHONE_NO"),
+        "address": os.getenv("LMSMember_ADDRESS"),
+        "date_of_birth": os.getenv("LMSMember_DATE_OF_BIRTH"),
+        "member_email": os.getenv("LMSMember_MEMBER_EMAIL"),
         "membership_type": random.choice(["Silver", "Gold", "Premium"]),
         "membership_price": str(random.uniform(1000, 2000)),
         "payment_status": random.choice(["Paid", "Unpaid","Partially Paid"]),
         "partial_paid_amount": str(random.uniform(100, 500)),
-        "issued_date": "2000-01-01",
-        "expiry_date": "2001-01-01"
+        "issued_date": os.getenv("LMSMember_ISSUED_DATE"),
+        "expiry_date": os.getenv("LMSMember_EXPIRY_DATE")
     }
 
     def member_creation(self):
