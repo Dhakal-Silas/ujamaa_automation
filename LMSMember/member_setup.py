@@ -32,10 +32,10 @@ class LMSMembers:
             lms_member=self.driver.find_element(*self.lms_member).click()
             time.sleep(2)
         except Exception as exp:
-            print("Failed: App unable to click")
+            print("Failed: Member Menuitem unable to click")
             print(exp)
         else:
-            print("Success: Open LMS Member")
+            print("Success: Opened LMS Member")
     
     def new_member(self,**kwargs):
         try:
@@ -57,10 +57,10 @@ class LMSMembers:
             expiry_date = self.driver.find_element(*self.expiry_date).send_keys(kwargs.get("expiry_date"))
             time.sleep(5)
         except Exception as E:
-            print("Failed: Failed to create a new member")
+            print("Failed: Failed to fill form of a new member")
             print(E)
         else:
-            print("Success: Created a new member")
+            print("Success: Form filled of a new member")
 
     def save_member(self):
         try:

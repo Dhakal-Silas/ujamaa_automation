@@ -23,7 +23,7 @@ class LMSGenre:
             lms_genre=self.driver.find_element(*self.lms_genre).click()
             time.sleep(2)
         except Exception as exp:
-            print("Failed: App unable to click")
+            print("Failed: Genre Menuitem unable to click")
             print(exp)
         else:
             print("Success: Open LMS Genre")
@@ -41,10 +41,10 @@ class LMSGenre:
             
             time.sleep(5)
         except Exception as E:
-            print("Failed: Failed to create a new genre")
+            print("Failed: Failed to fill form of a new genre")
             print(E)
         else:
-            print("Success: Created a new genre")
+            print("Success: Form filled of a new genre")
 
     def save_genre(self):
         try:

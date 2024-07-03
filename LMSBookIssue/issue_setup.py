@@ -1,5 +1,7 @@
 from selenium.webdriver.common.by import By
-import time, os
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
 
 class LMSBookIssue:
     def __init__(self, driver):
@@ -17,42 +19,45 @@ class LMSBookIssue:
         #buttons
         self.issue = (By.XPATH,"//button[@name='action_view_new_issue_form']")
         self.reset = (By.XPATH,"//button[@name='reset_form']")
+        self.ok = (By.XPATH, "//div[@class='o_dialog_container modal-open']//button[contains(text(), 'Ok')]")
+        self.issuetext = (By.XPATH, "//*[text()='Issue a Book ']")
 
         self.autocomplete_dropdown = (By.CLASS_NAME, "o-autocomplete--dropdown-item")
-
-        self.issue_details = {
-            "member": os.getenv("LMSMember_NAME"),
-            "book": os.getenv("LMSIssue_BOOK"),
-            "issued_date": os.getenv("LMSIssue_IssueDate"),
-        }
 
     def open_LMSBook_Issue(self):
         try:
             book_issue = self.driver.find_element(*self.book_issue).click()
-            time.sleep(2)
+            time.sleep(3)
         except Exception as exp:
             print("Failed: Failed to open Issue a Book")
             print(exp)
         else:
             print("Success: Opened Issue a Book page")
 
-    def IssueaBook(self):
+    def IssueaBook(self,**kwargs):
         try:
-            self.driver.find_element(*self.member).send_keys(self.issue_details.get("member"))
+            self.driver.find_element(*self.issue_a_book).click()
+            time.sleep(2)
+            
+            self.driver.find_element(*self.member).send_keys(kwargs.get("member"))
             time.sleep(2)
             member_options = self.driver.find_elements(*self.autocomplete_dropdown)
             if member_options:
                 member_options[0].click()
+            time.sleep(2)
 
-            self.driver.find_element(*self.book).send_keys(self.issue_details.get("book"))
+            self.driver.find_element(*self.book).send_keys(kwargs.get("book"))
             time.sleep(2)
             book_options = self.driver.find_elements(*self.autocomplete_dropdown)
             if book_options:
                 book_options[0].click()
-            
+            time.sleep(2)
+
             self.driver.find_element(*self.issued_date).clear()
-            self.driver.find_element(*self.issued_date).send_keys(self.issue_details.get("issued_date"))
-            time.sleep(3)
+            self.driver.find_element(*self.issued_date).send_keys(kwargs.get("issued_date"))
+            self.driver.find_element(*self.issuetext).click()
+
+            time.sleep(4)
         except Exception as exp:
             print("Failed: Failed to fill Book Issue Form")
             print(exp)
@@ -65,16 +70,14 @@ class LMSBookIssue:
 
     def IssueButton(self):
         self.driver.find_element(*self.issue).click()
+        try:
+            WebDriverWait(self.driver, 5).until(
+            EC.visibility_of_element_located((By.XPATH, "//div[@class='o_dialog_container modal-open']"))
+            )
+
+            ok_button = self.driver.find_element(*self.ok)
+            ok_button.click()
+            print("OK clicked for member")
+        except Exception as exp:
+            print(exp)
         time.sleep(2)
-
-class LMSBookTest:
-    def __init__(self, driver):
-        self.driver = driver
-
-    def issue_creation(self):
-        lms_book_issue=LMSBookIssue(self.driver)
-        lms_book_issue.open_LMSBook_Issue()
-        lms_book_issue.IssueaBook()
-        # lms_book_issue.ResetButton()
-        lms_book_issue.IssueButton()
-        

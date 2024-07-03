@@ -8,7 +8,7 @@ from LMSMember.member_test import LMSMemberTest
 from LMSAuthor.author_test import LMSAuthorTest
 from LMSBook.book_test import LMSBookTest
 from LMSGenre.genre_test import LMSGenreTest
-from LMSBookIssue.issue_setup import LMSBookTest
+from LMSBookIssue.issue_test import LMSBookIssueTest
 
 class LMS:
     def __init__(self):
@@ -57,7 +57,7 @@ class LMS:
             print("Failed: Unable to click LMS")
             print(exp)
         else:
-            print("Success: Opened LMS")
+            print("Success: Opened LMS Root Menu")
 
 lms=LMS()
 
@@ -66,21 +66,22 @@ lms.login(os.getenv("EMAIL"),os.getenv("PASSWORD"))
 lms.open_lms()
 
 # Add Member
-# lms_member_test=LMSMemberTest(lms.driver)
-# lms_member_test.member_creation()
+lms_member_test=LMSMemberTest(lms.driver)
+lms_member_test.member_creation()
 
 #Add Genre
-# lms_genre_test=LMSGenreTest(lms.driver)
-# lms_genre_test.genre_creation()
+lms_genre_test=LMSGenreTest(lms.driver)
+lms_genre_test.genre_creation()
 
 # #Add Author
-# lms_author_test=LMSAuthorTest(lms.driver)
-# lms_author_test.author_creation()
+lms_author_test=LMSAuthorTest(lms.driver)
+lms_author_test.author_creation()
 
 #Add Book
-# lms_book_test=LMSBookTest(lms.driver)
-# lms_book_test.book_creation()
+lms_book_test=LMSBookTest(lms.driver)
+lms_book_test.book_creation()
 
 #Issue a Book
-lms_book_test=LMSBookTest(lms.driver)
-lms_book_test.issue_creation()
+lms_book_test=LMSBookIssueTest(lms.driver)
+lms_book_test.book_issue_creation()
+lms_book_test.book_return()

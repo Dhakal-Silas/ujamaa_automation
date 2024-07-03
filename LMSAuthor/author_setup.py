@@ -103,6 +103,7 @@ class LMSAuthors():
                 if author_books:
                     author_books[0].click()
                 time.sleep(2)
+            print("Success: Searched Book Added to Author")
         except Exception as E:
             print("Failed: Failed to create a new author")
             print(E)
@@ -121,6 +122,7 @@ class LMSAuthors():
             time.sleep(2)
             lms_book.book_fill_information_description(**new_book_details)
             time.sleep(2)
+            print("Success: New Book Added to Author")
         except Exception as E:
             print("Failed: Failed to create a new author")
             print(E)   
