@@ -13,9 +13,15 @@ class LMSAuthorTest:
         "country": os.getenv("LMSAuthor_COUNTRY"),
         "language": os.getenv("LMSAuthor_LANGUAGE"),
     }
-    author_books = {
-        "search": os.getenv("LMSAuthorBook_SEARCH").split(",")
-    }
+
+    author_books = {}
+    search_value = os.getenv("LMSAuthorBook_SEARCH")
+
+    if search_value:
+        author_books["search"] = search_value.split(",")
+    else:
+        author_books["search"] = []
+
     new_books = {
         "name": os.getenv("LMSAuthorBook_NAME"),
         "isbn": os.getenv("LMSBook_ISBN"),
@@ -46,7 +52,7 @@ class LMSAuthorTest:
         if author_name:
             self.new_books["authors"].append(author_name)
 
-        # lms_author.new_author(**self.authors_info)
         lms_author.SearchBookFromAuthor(**self.author_books)
         lms_author.NewBookFromAuthor(**self.new_books)
         lms_author.saveandclose()
+        lms_author.save()

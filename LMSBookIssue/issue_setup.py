@@ -10,7 +10,7 @@ class LMSBookIssue:
         # LMS Issue a Book menuitem
         self.book_issue = (By.XPATH,"//button[@data-menu-xmlid='lms_book_issue.lms_book_issue_menu']")
         self.issue_a_book = (By.XPATH,"//a[@data-menu-xmlid='lms_book_issue.lms_quick_book_issue_menu']")
-
+ 
         # Member Fields
         self.member = (By.ID, "member_id")
         self.book = (By.ID, "book_id")
@@ -34,11 +34,16 @@ class LMSBookIssue:
         else:
             print("Success: Opened Issue a Book page")
 
-    def IssueaBook(self,**kwargs):
+    def ClickIssueaBook(self):
         try:
             self.driver.find_element(*self.issue_a_book).click()
             time.sleep(2)
-            
+        except Exception as exp:
+            print("Failed: Failed to open issue a book")
+            print(exp)
+        
+    def IssueaBook(self,**kwargs):
+        try:
             self.driver.find_element(*self.member).send_keys(kwargs.get("member"))
             time.sleep(2)
             member_options = self.driver.find_elements(*self.autocomplete_dropdown)
@@ -46,18 +51,22 @@ class LMSBookIssue:
                 member_options[0].click()
             time.sleep(2)
 
-            self.driver.find_element(*self.book).send_keys(kwargs.get("book"))
-            time.sleep(2)
-            book_options = self.driver.find_elements(*self.autocomplete_dropdown)
-            if book_options:
-                book_options[0].click()
+            book_element= self.driver.find_element(*self.book)
+            if book_element.get_attribute("value").strip() == "":
+                book_element.send_keys(kwargs.get("book"))
+                time.sleep(2)
+                book_options = self.driver.find_elements(*self.autocomplete_dropdown)
+                if book_options:
+                    book_options[0].click()
+            else:
+                print("continue")
             time.sleep(2)
 
             self.driver.find_element(*self.issued_date).clear()
             self.driver.find_element(*self.issued_date).send_keys(kwargs.get("issued_date"))
             self.driver.find_element(*self.issuetext).click()
 
-            time.sleep(4)
+            time.sleep(3)
         except Exception as exp:
             print("Failed: Failed to fill Book Issue Form")
             print(exp)

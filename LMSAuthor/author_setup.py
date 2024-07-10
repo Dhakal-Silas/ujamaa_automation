@@ -1,7 +1,9 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
-from LMSBook.book_setup import LMSBook
+from LMSBook.newbook import LMSBook
 class LMSAuthors():
     def __init__(self,driver):    
         self.driver=driver 
@@ -32,8 +34,7 @@ class LMSAuthors():
 
     def open_lms_author(self):
         try:
-            lms_author=self.driver.find_element(*self.lms_author).click()
-            time.sleep(2)
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(self.lms_author)).click()
         except Exception as exp:
             print("Failed: Author Menuitem unable to click")
             print(exp)
@@ -42,9 +43,10 @@ class LMSAuthors():
 
     def click_new(self):
         try:
+            WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.new))
             new=self.driver.find_element(*self.new).click()
         except Exception as E:
-            print("Failed: Failed to click author")
+            print("Failed: Failed to click new button on author")
             print(E)
 
     def new_author(self,**kwargs):
@@ -71,7 +73,6 @@ class LMSAuthors():
                 save_icon = self.driver.find_element(*self.save_icon)
                 save_icon.click()
                 self.driver.implicitly_wait(2)
-                time.sleep(2)
             except Exception as E:
                 print("Failed: Failed To Save Author Information")
                 print(E)
@@ -87,19 +88,20 @@ class LMSAuthors():
         try:
             books=kwargs.get("search",[])
             for book in books:
+                WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.add))
                 add=self.driver.find_element(*self.add).click()
                 time.sleep(2)
 
                 #search book
                 search=self.driver.find_element(*self.searchbox)
-                search_click=search.click()
+                search.click()
                 time.sleep(2)
                 search_book=search.send_keys(book)
                 search_enter=search.send_keys(Keys.RETURN)
                 time.sleep(2)
 
                 #click book
-                author_books = self.driver.find_elements(*self.book)
+                author_books = WebDriverWait(self.driver, 10).until(EC.presence_of_all_elements_located(self.book))
                 if author_books:
                     author_books[0].click()
                 time.sleep(2)
@@ -110,10 +112,8 @@ class LMSAuthors():
     
     def NewBookFromAuthor(self,**new_book_details):
         try:
-            add=self.driver.find_element(*self.add).click()
-            time.sleep(2)
-            newbook=self.driver.find_element(*self.newbook).click()
-            time.sleep(2)
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(self.add)).click()
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(self.newbook)).click()
 
             lms_book = LMSBook(self.driver)
             lms_book.fill_book_information(**new_book_details)
@@ -129,7 +129,6 @@ class LMSAuthors():
 
     def saveandclose(self):
         try:    
-            # save the author information
             save_and_close = self.driver.find_element(*self.save_close)
             save_and_close.click()
             self.driver.implicitly_wait(2)
@@ -139,3 +138,16 @@ class LMSAuthors():
             print(E)
         else:
             print("Success: Saved and Closed")
+
+    def save(self):
+        try:
+            # save the member information
+            save_icon = self.driver.find_element(*self.save_icon)
+            save_icon.click()
+            self.driver.implicitly_wait(2)
+            time.sleep(2)
+        except Exception as E:
+            print("Failed: Failed To Save Member Information")
+            print(E)
+        else:
+            print("Success: Saved Author With all added books")

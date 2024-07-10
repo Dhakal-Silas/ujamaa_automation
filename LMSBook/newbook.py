@@ -1,4 +1,6 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 
 class LMSBook:
@@ -49,8 +51,8 @@ class LMSBook:
 
     def open_lms_book(self):
         try:
-            lms_book=self.driver.find_element(*self.lms_member).click()
-            time.sleep(2)
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(self.lms_member)).click()
+            time.sleep(5)
         except Exception as exp:
             print("Failed: Book Menuitem unable to click")
             print(exp)
@@ -59,13 +61,11 @@ class LMSBook:
 
     def click_new_book(self):
         try:
+            WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.new))
             new=self.driver.find_element(*self.new).click()
-            time.sleep(5)
         except Exception as E:
-            print("Failed: Failed to create a new author")
+            print("Failed: Failed to click new button")
             print(E)
-        else:
-            print("Success: Created a new author")
 
     def fill_book_information(self,**kwargs):
         try:
@@ -136,8 +136,7 @@ class LMSBook:
 
     def fill_book_information_publisher(self,**kwargs):
         try:
-            publisher_page=self.driver.find_element(*self.publisher_page).click()
-            self.driver.implicitly_wait(2)
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(self.publisher_page)).click()
 
             #is_translated
             is_translated_kwargs=kwargs.get("is_translated")
@@ -194,10 +193,8 @@ class LMSBook:
     def book_fill_information_description(self,**kwargs):
         try:
             #description
-            description_page=self.driver.find_element(*self.description_page).click()
-            self.driver.implicitly_wait(2)
-            description=self.driver.find_element(*self.write_description).send_keys(kwargs.get("write_description"))
-            time.sleep(4)
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(self.description_page)).click()
+            WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.write_description)).send_keys(kwargs.get("write_description"))
         except Exception as E:
             print("Failed: Failed to Fill Description")
             print(E)

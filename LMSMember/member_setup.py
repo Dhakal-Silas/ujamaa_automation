@@ -1,4 +1,6 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 
 class LMSMembers:
@@ -29,8 +31,9 @@ class LMSMembers:
 
     def open_lms_member(self):
         try:
-            lms_member=self.driver.find_element(*self.lms_member).click()
-            time.sleep(2)
+            WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(self.lms_member)
+            ).click()
         except Exception as exp:
             print("Failed: Member Menuitem unable to click")
             print(exp)
@@ -39,8 +42,10 @@ class LMSMembers:
     
     def new_member(self,**kwargs):
         try:
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located(self.new)
+            )
             new=self.driver.find_element(*self.new).click()
-
             name = self.driver.find_element(*self.name).send_keys(kwargs.get("name"))
             phone_no = self.driver.find_element(*self.phone_no).send_keys(kwargs.get("phone_no"))
             address = self.driver.find_element(*self.address).send_keys(kwargs.get("address"))
@@ -54,8 +59,9 @@ class LMSMembers:
                 partial_payment_clear = self.driver.find_element(*self.partial_payment_amount).clear()
                 partial_payment_amount=self.driver.find_element(*self.partial_payment_amount).send_keys(kwargs.get("partial_paid_amount"))
             issued_date = self.driver.find_element(*self.issued_date).send_keys(kwargs.get("issued_date"))
-            expiry_date = self.driver.find_element(*self.expiry_date).send_keys(kwargs.get("expiry_date"))
-            time.sleep(5)
+            expiry_date = self.driver.find_element(*self.expiry_date).clear()
+            self.driver.find_element(*self.expiry_date).send_keys(kwargs.get("expiry_date"))
+            time.sleep(3)
         except Exception as E:
             print("Failed: Failed to fill form of a new member")
             print(E)

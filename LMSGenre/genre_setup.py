@@ -1,4 +1,6 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 
 class LMSGenre:
@@ -20,8 +22,9 @@ class LMSGenre:
 
     def open_lms_genre(self):
         try:
-            lms_genre=self.driver.find_element(*self.lms_genre).click()
-            time.sleep(2)
+            WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(self.lms_genre)
+            ).click()
         except Exception as exp:
             print("Failed: Genre Menuitem unable to click")
             print(exp)
@@ -30,16 +33,17 @@ class LMSGenre:
     
     def new_genre(self,**kwargs):
         try:
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located(self.new)
+            )
             new=self.driver.find_element(*self.new).click()
 
             name = self.driver.find_element(*self.name).send_keys(kwargs.get("name"))
-
             click_color_button = self.driver.find_element(*self.color_buttom).click()
             time.sleep(2)
             color_button_xpath = f"//button[@title='{kwargs.get('choice')}']"
             color=self.driver.find_element(By.XPATH,color_button_xpath).click()
-            
-            time.sleep(5)
+            time.sleep(3)
         except Exception as E:
             print("Failed: Failed to fill form of a new genre")
             print(E)
